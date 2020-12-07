@@ -23,11 +23,13 @@ const FormButton = ({
 }: FormButtonProps) => {
   return (
     <TouchableOpacity
-      style={styles.buttonContainer}
-      {...rest}
+      style={[styles.buttonContainer]}
+      disabled={isSubmitting}
       onPress={(handleSubmit as unknown) as (ev: GestureResponderEvent) => void}
     >
-      <Text style={styles.buttonText}>{buttonTitle}</Text>
+      <Text style={styles.buttonText}>
+        {!isSubmitting ? buttonTitle : "Loading"}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 15,
     marginBottom: 15,
-    width: "100%",
+    width: window.width / 3,
     height: window.height / 15,
     backgroundColor: "#2e64e5",
     padding: 10,

@@ -7,7 +7,7 @@ import { RootStackParamList } from "../types";
 
 type ProfileScreenNavigationProp = NavigationScreenProp<
   RootStackParamList,
-  "Register"
+  "Login"
 >;
 
 type Props = {

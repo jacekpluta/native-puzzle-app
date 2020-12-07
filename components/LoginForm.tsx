@@ -1,7 +1,7 @@
 // Formik x React Native example
 import React, { useContext } from "react";
 import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
-import { Formik, FormikHelpers, ErrorMessage } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { window } from "../constants/Layout";
 import FormInput from "./FormInput";
 import FormButton from "./FormButton";
@@ -34,9 +34,8 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
     password: "",
   };
 
-  const { login } = useContext(AuthContext);
-  const sleep = (ms: any) => new Promise((r) => setTimeout(r, ms));
-
+  const { login, errorUser, errorUserMessage } = useContext(AuthContext);
+  console.log(errorUserMessage);
   return (
     <Formik
       initialValues={initialValues}
@@ -45,8 +44,8 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
         values: MyFormValues,
         { setSubmitting }: FormikHelpers<MyFormValues>
       ) => {
-        await sleep(500);
-        alert(JSON.stringify(values, null, 2));
+        const data = await login(values.username, values.password);
+        console.log("data", data);
         setSubmitting(false);
       }}
     >
@@ -68,7 +67,7 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
 
           <FormInput
             touched={touched.username}
-            errors={errors.username}
+            errors={errors.username || errorUserMessage}
             labelValue={values.username}
             placeholderText={"Username"}
             iconType={"user"}
@@ -80,7 +79,7 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
 
           <FormInput
             touched={touched.password}
-            errors={errors.password}
+            errors={errors.password || errorUserMessage}
             labelValue={values.password}
             placeholderText={"Password"}
             type={"password"}
