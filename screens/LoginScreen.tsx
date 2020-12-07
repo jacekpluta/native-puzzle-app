@@ -8,7 +8,7 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <View style={styles.separator} />
-      <Login path="/screens/Login.js" />
+      <Login />
     </View>
   );
 }

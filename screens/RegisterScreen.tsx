@@ -1,14 +1,14 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import Register from "../components/Login";
+import Register from "../components/Register";
 
 export default function RegisterScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <View style={styles.separator} />
-      <Register path="/screens/Register.js" />
+      <Register />
     </View>
   );
 }
