@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 import {
   ColorSchemeName,
   useColorScheme as _useColorScheme,
 } from "react-native";
-=======
-import { ColorSchemeName, useColorScheme as _useColorScheme } from 'react-native';
->>>>>>> 3566f30ea85a8a827cda644e8ee9b34df28219c4
 
 // The useColorScheme value is always either light or dark, but the built-in
 // type suggests that it can be null. This will not happen in practice, so this
