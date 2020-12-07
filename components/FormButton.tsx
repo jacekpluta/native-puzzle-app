@@ -4,17 +4,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   GestureResponderEvent,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
 } from "react-native";
 import { window } from "../constants/Layout";
 
 interface FormButtonProps {
   buttonTitle: string;
   handleSubmit: any;
+  isSubmitting: boolean;
 }
 
 const FormButton = ({
   buttonTitle,
   handleSubmit,
+  isSubmitting,
   ...rest
 }: FormButtonProps) => {
   return (
@@ -32,7 +36,8 @@ export default FormButton;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginTop: 10,
+    marginTop: 15,
+    marginBottom: 15,
     width: "100%",
     height: window.height / 15,
     backgroundColor: "#2e64e5",
@@ -45,6 +50,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#ffffff",
-    fontFamily: "Lato-Regular",
+    fontFamily: "normal",
   },
 });

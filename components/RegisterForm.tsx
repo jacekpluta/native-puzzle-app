@@ -1,116 +1,130 @@
 // Formik x React Native example
 import React, { useContext } from "react";
-import {
-  Button,
-  GestureResponderEvent,
-  TextInput,
-  View,
-  StyleSheet,
-  Platform,
-  TouchableOpacity,
-  Image,
-  Text,
-} from "react-native";
-import {
-  Formik,
-  FormikHelpers,
-  FormikProps,
-  Form,
-  Field,
-  FieldProps,
-} from "formik";
+import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
+import { Formik, FormikHelpers } from "formik";
 import { window } from "../constants/Layout";
 import FormInput from "./FormInput";
 import FormButton from "./FormButton";
-import SocialButton from "./SocialButton";
 import { AuthContext } from "../navigation/AuthProvider";
+import * as Yup from "yup";
+import ErrorFormInput from "./FormErrorInput";
 
-interface MyFormValues {
-  name: string;
+export interface MyFormValues {
+  username: string;
   password: string;
   passwordRepeat: string;
 }
 
-export const RegisterForm: React.FC<{}> = () => {
+const RegisterSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(3, "Too Short!")
+    .max(30, "Too Long!")
+    .required("Required"),
+  password: Yup.string()
+    .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+    .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
+    .matches(/\d/, "Password must have a number")
+    // .matches(
+    //   /[!@#$%^&*()\-_"=+{}; :,<.>]/,
+    //   "Password must have a special character"
+    // )
+    .min(8, ({ min }) => `Password must be at least ${min} characters`)
+    .required("Password is required"),
+  passwordRepeat: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords do not match")
+    .required("Confirm password is required"),
+});
+
+export const RegisterForm: React.FC<{ navigation: any }> = ({ navigation }) => {
   const initialValues: MyFormValues = {
-    name: "",
+    username: "",
     password: "",
     passwordRepeat: "",
   };
 
-  const { login, googleLogin, fbLogin } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
+  const sleep = (ms: any) => new Promise((r) => setTimeout(r, ms));
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, actions) => {
-        console.log({ values, actions });
+      validationSchema={RegisterSchema}
+      onSubmit={async (
+        values: MyFormValues,
+        { setSubmitting }: FormikHelpers<MyFormValues>
+      ) => {
+        await sleep(500);
         alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
+        setSubmitting(false);
       }}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
-        <View>
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        isSubmitting,
+        touched,
+        errors,
+      }) => (
+        <View style={styles.container}>
           <Image
-            source={require(".././assets/images/adaptive-icon.png")}
+            source={require(".././assets/images/puzzles.png")}
             style={styles.logo}
           />
-          <Text style={styles.text}>RN Social App</Text>
+          <Text style={styles.text}>Register</Text>
 
           <FormInput
-            labelValue={values.name}
+            touched={touched.username}
+            errors={errors.username}
+            labelValue={values.username}
             placeholderText={"Username"}
-            iconType={"login"}
+            iconType={"user"}
+            type={"username"}
             handleChange={handleChange}
             handleBlur={handleBlur}
           ></FormInput>
+          <ErrorFormInput touched={touched.username} errors={errors.username} />
           <FormInput
+            touched={touched.password}
+            errors={errors.password}
             labelValue={values.password}
             placeholderText={"Password"}
-            iconType={"login"}
+            type={"password"}
+            iconType={"chain"}
             handleChange={handleChange}
             handleBlur={handleBlur}
           ></FormInput>
+
+          <ErrorFormInput touched={touched.password} errors={errors.password} />
+
           <FormInput
+            touched={touched.passwordRepeat}
+            errors={errors.passwordRepeat}
             labelValue={values.passwordRepeat}
             placeholderText={"Repeat password"}
-            iconType={"login"}
+            type={"passwordRepeat"}
+            iconType={"chain"}
             handleChange={handleChange}
             handleBlur={handleBlur}
           ></FormInput>
+          <ErrorFormInput
+            touched={touched.passwordRepeat}
+            errors={errors.passwordRepeat}
+          />
 
-          <FormButton handleSubmit={handleSubmit} buttonTitle="Submit" />
-
-          <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
-            <Text style={styles.navButtonText}>Forgot Password?</Text>
-          </TouchableOpacity>
-
-          {Platform.OS === "android" ? (
-            <View>
-              <SocialButton
-                buttonTitle="Sign In with Facebook"
-                btnType="facebook"
-                color="#4867aa"
-                backgroundColor="#e6eaf4"
-                onPress={() => fbLogin()}
-              />
-
-              <SocialButton
-                buttonTitle="Sign In with Google"
-                btnType="google"
-                color="#de4d41"
-                backgroundColor="#f5e7ea"
-                onPress={() => googleLogin()}
-              />
-            </View>
-          ) : null}
+          <FormButton
+            isSubmitting={isSubmitting}
+            handleSubmit={handleSubmit}
+            buttonTitle="Submit"
+          />
 
           <TouchableOpacity
-            style={styles.forgotButton}
-            // onPress={() => navigation.navigate('Signup')}
+            style={styles.navButton}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={styles.navButtonText}>
-              Don't have an acount? Create here
+              Already have an acount? Go here
             </Text>
           </TouchableOpacity>
         </View>
@@ -124,29 +138,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    paddingTop: 50,
+    flex: 1,
+  },
+  error: {
+    fontSize: 10,
+    color: "red",
+  },
+  errorEmpty: {
+    height: 10,
   },
   logo: {
-    height: 150,
-    width: 150,
+    height: 100,
+    width: 100,
     resizeMode: "cover",
   },
   text: {
-    fontFamily: "Kufam-SemiBoldItalic",
+    fontFamily: "normal",
     fontSize: 28,
     marginBottom: 10,
     color: "#051d5f",
   },
   navButton: {
-    marginTop: 15,
-  },
-  forgotButton: {
-    marginVertical: 35,
+    marginVertical: 15,
   },
   navButtonText: {
     fontSize: 18,
     fontWeight: "500",
     color: "#2e64e5",
-    fontFamily: "Lato-Regular",
+    fontFamily: "normal",
   },
 });

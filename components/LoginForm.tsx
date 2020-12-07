@@ -1,63 +1,125 @@
 // Formik x React Native example
-import React from "react";
-import {
-  Button,
-  GestureResponderEvent,
-  TextInput,
-  View,
-  StyleSheet,
-} from "react-native";
-import {
-  Formik,
-  FormikHelpers,
-  FormikProps,
-  Form,
-  Field,
-  FieldProps,
-} from "formik";
+import React, { useContext } from "react";
+import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
+import { Formik, FormikHelpers, ErrorMessage } from "formik";
 import { window } from "../constants/Layout";
+import FormInput from "./FormInput";
+import FormButton from "./FormButton";
+import SocialButton from "./SocialButton";
+import { AuthContext } from "../navigation/AuthProvider";
+import * as Yup from "yup";
+import ErrorFormInput from "./FormErrorInput";
 
 interface MyFormValues {
-  name: string;
+  username: string;
   password: string;
 }
 
-export const LoginForm: React.FC<{}> = () => {
-  const initialValues: MyFormValues = { name: "", password: "" };
+const LoginSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(3, "Too Short!")
+    .max(30, "Too Long!")
+    .required("Required"),
+  password: Yup.string()
+    .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+    .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
+    .matches(/\d/, "Password must have a number")
+    .min(8, ({ min }) => `Password must be at least ${min} characters`)
+    .required("Password is required"),
+});
+
+export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const initialValues: MyFormValues = {
+    username: "",
+    password: "",
+  };
+
+  const { login } = useContext(AuthContext);
+  const sleep = (ms: any) => new Promise((r) => setTimeout(r, ms));
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, actions) => {
-        console.log({ values, actions });
+      validationSchema={LoginSchema}
+      onSubmit={async (
+        values: MyFormValues,
+        { setSubmitting }: FormikHelpers<MyFormValues>
+      ) => {
+        await sleep(500);
         alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
+        setSubmitting(false);
       }}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
-        <View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              onChangeText={handleChange("name")}
-              onBlur={handleBlur("name")}
-              value={values.name}
-              style={styles.inputField}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputField}
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-            />
-          </View>
-          <Button
-            onPress={
-              (handleSubmit as unknown) as (ev: GestureResponderEvent) => void
-            }
-            title="Submit"
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        isSubmitting,
+        touched,
+        errors,
+      }) => (
+        <View style={styles.container}>
+          <Image
+            source={require(".././assets/images/puzzles.png")}
+            style={styles.logo}
           />
+          <Text style={styles.text}>Login</Text>
+
+          <FormInput
+            touched={touched.username}
+            errors={errors.username}
+            labelValue={values.username}
+            placeholderText={"Username"}
+            iconType={"user"}
+            type={"username"}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+          ></FormInput>
+          <ErrorFormInput touched={touched.username} errors={errors.username} />
+
+          <FormInput
+            touched={touched.password}
+            errors={errors.password}
+            labelValue={values.password}
+            placeholderText={"Password"}
+            type={"password"}
+            iconType={"chain"}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+          ></FormInput>
+          <ErrorFormInput touched={touched.password} errors={errors.password} />
+          <FormButton
+            isSubmitting={isSubmitting}
+            handleSubmit={handleSubmit}
+            buttonTitle="Submit"
+          />
+
+          <TouchableOpacity
+            style={styles.forgotButton}
+            // onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            <Text style={styles.navButtonText}>Forgot Password?</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.forgotButton}
+            onPress={() => navigation.navigate("Register")}
+          >
+            <Text style={styles.navButtonText}>
+              Don't have an acount? Create here
+            </Text>
+          </TouchableOpacity>
+
+          <View>
+            <SocialButton
+              buttonTitle="Sign In with Facebook"
+              btnType="facebook"
+              color="#4867aa"
+              backgroundColor="#e6eaf4"
+              onPress={() => {}}
+            />
+          </View>
         </View>
       )}
     </Formik>
@@ -65,44 +127,40 @@ export const LoginForm: React.FC<{}> = () => {
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginTop: 5,
-    marginBottom: 10,
-    width: "100%",
-    height: window.height / 15,
-    borderColor: "#ccc",
-    borderRadius: 3,
-    borderWidth: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  iconStyle: {
-    padding: 10,
-    height: "100%",
+  container: {
     justifyContent: "center",
     alignItems: "center",
-    borderRightColor: "#ccc",
-    borderRightWidth: 1,
-    width: 50,
-  },
-  input: {
-    padding: 10,
+    padding: 20,
     flex: 1,
-    fontSize: 16,
-    fontFamily: "Lato-Regular",
-    color: "#333",
-    justifyContent: "center",
-    alignItems: "center",
   },
-  inputField: {
-    padding: 10,
-    marginTop: 5,
+  error: {
+    fontSize: 10,
+    color: "red",
+  },
+  errorEmpty: {
+    height: 13,
+  },
+  logo: {
+    height: 100,
+    width: 100,
+    resizeMode: "cover",
+  },
+  text: {
+    fontFamily: "normal",
+    fontSize: 28,
     marginBottom: 10,
-    width: window.width / 1.5,
-    height: window.height / 15,
-    fontSize: 16,
-    borderRadius: 8,
-    borderWidth: 1,
+    color: "#051d5f",
+  },
+  navButton: {
+    marginTop: 15,
+  },
+  forgotButton: {
+    marginVertical: 15,
+  },
+  navButtonText: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#2e64e5",
+    fontFamily: "normal",
   },
 });

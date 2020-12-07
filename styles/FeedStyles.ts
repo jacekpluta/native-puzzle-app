@@ -35,18 +35,18 @@ export const UserInfoText = styled.View`
 export const UserName = styled.Text`
   font-size: 14px;
   font-weight: bold;
-  font-family: "Lato-Regular";
+  font-family: "normal";
 `;
 
 export const PostTime = styled.Text`
   font-size: 12px;
-  font-family: "Lato-Regular";
+  font-family: "normal";
   color: #666;
 `;
 
 export const PostText = styled.Text`
   font-size: 14px;
-  font-family: "Lato-Regular";
+  font-family: "normal";
   padding-left: 15px;
   padding-right: 15px;
 `;
@@ -82,7 +82,7 @@ export const Interaction = styled.TouchableOpacity`
 
 export const InteractionText = styled.Text`
   font-size: 12px;
-  font-family: "Lato-Regular";
+  font-family: "normal";
   font-weight: bold;
   color: ${({ active }: any) => (active ? "#2e64e5" : "#333")};
   margin-top: 5px;

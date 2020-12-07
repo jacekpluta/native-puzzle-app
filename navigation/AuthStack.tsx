@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import LoginScreen from "../screens/LoginScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import { FontAwesome } from "@expo/vector-icons";
-
 import AsyncStorage from "@react-native-community/async-storage";
-import { GoogleSignin } from "@react-native-community/google-signin";
-import NotFoundScreen from "../screens/NotFoundScreen";
 
-import BottomTabNavigator from "./BottomTabNavigator";
+import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
+import AppStack from "./AppStack";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -29,10 +26,6 @@ const AuthStack = () => {
         setIsFirstLaunch(false);
       }
     }); // Add some error handling, also you can simply do setIsFirstLaunch(null)
-
-    GoogleSignin.configure({
-      webClientId: "YOUR_APP_WEB_CLIENT_ID",
-    });
   }, []);
 
   if (isFirstLaunch === null) {
@@ -79,7 +72,7 @@ const AuthStack = () => {
         })}
       />
 
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
+      <Stack.Screen name="Root" component={AppStack} />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}

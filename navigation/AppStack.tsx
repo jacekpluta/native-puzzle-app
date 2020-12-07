@@ -1,38 +1,70 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import {
+  BottomTabParamList,
+  LoginParamList,
+  RegisterParamList,
+  RootStackParamList,
+} from "../types";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import { NavigationScreenProp } from "react-navigation";
 
-import { FontAwesome } from "@expo/vector-icons";
+const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
-import HomeScreen from "../screens/HomeScreen";
+type ProfileScreenNavigationProp = NavigationScreenProp<
+  RootStackParamList,
+  "App"
+>;
+type Props = {
+  navigation: ProfileScreenNavigationProp;
+};
 
-const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
-
-const AppStack = () => {
+const AppStack = ({ navigation }: Props) => {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: "#2e64e5",
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={FeedStack}
+    <BottomTab.Navigator initialRouteName="Login">
+      <BottomTab.Screen
+        name="Login"
+        component={LoginNavigator}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="home-outline"
-              color={color}
-              size={size}
-            />
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="login" size={24} color={color} />
           ),
         }}
       />
-    </Tab.Navigator>
+      <BottomTab.Screen
+        name="Register"
+        component={RegisterNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="chain" size={24} color={color} />
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
   );
 };
+
+const LoginStack = createStackNavigator<LoginParamList>();
+
+function LoginNavigator() {
+  return (
+    <LoginStack.Navigator headerMode="none">
+      <LoginStack.Screen name="LoginScreen" component={LoginScreen} />
+    </LoginStack.Navigator>
+  );
+}
+
+const RegisterStack = createStackNavigator<RegisterParamList>();
+
+function RegisterNavigator() {
+  return (
+    <RegisterStack.Navigator headerMode="none">
+      <RegisterStack.Screen name="RegisterScreen" component={RegisterScreen} />
+    </RegisterStack.Navigator>
+  );
+}
 
 export default AppStack;

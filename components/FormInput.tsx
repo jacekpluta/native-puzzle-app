@@ -1,8 +1,9 @@
 import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import { window } from "../constants/Layout";
-
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { FormikErrors, FormikTouched } from "formik";
+import { MyFormValues } from "./RegisterForm";
 
 interface FormInputProps {
   labelValue: string;
@@ -10,6 +11,9 @@ interface FormInputProps {
   iconType: string;
   handleChange: any;
   handleBlur: any;
+  type: string;
+  touched: boolean | undefined;
+  errors: any;
 }
 
 const FormInput = ({
@@ -18,21 +22,26 @@ const FormInput = ({
   iconType,
   handleChange,
   handleBlur,
+  type,
+  touched,
+  errors,
   ...rest
 }: FormInputProps) => {
   return (
-    <View style={styles.inputContainer}>
+    <View
+      style={[styles.inputContainer, errors && touched && styles.errorInput]}
+    >
       <View style={styles.iconStyle}>
-        <AntDesign name={iconType} size={25} color="#666" />
+        <FontAwesome name={iconType} size={25} color="#666" />
       </View>
       <TextInput
         value={labelValue}
-        style={styles.input}
+        style={[styles.input]}
         numberOfLines={1}
         placeholder={placeholderText}
         placeholderTextColor="#666"
-        onChangeText={handleChange("password")}
-        onBlur={handleBlur("password")}
+        onChangeText={handleChange(type)}
+        onBlur={handleBlur(type)}
         {...rest}
       />
     </View>
@@ -43,8 +52,8 @@ export default FormInput;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 5,
-    marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 2,
     width: "100%",
     height: window.height / 15,
     borderColor: "#ccc",
@@ -62,6 +71,9 @@ const styles = StyleSheet.create({
     borderRightColor: "#ccc",
     borderRightWidth: 1,
     width: 50,
+  },
+  errorInput: {
+    borderColor: "red",
   },
   input: {
     padding: 10,

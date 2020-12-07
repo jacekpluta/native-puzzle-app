@@ -1,14 +1,22 @@
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { RegisterForm } from "../components/RegisterForm";
+import { NavigationScreenProp } from "react-navigation";
+import { RootStackParamList } from "../types";
 
-import Register from "../components/Register";
+type ProfileScreenNavigationProp = NavigationScreenProp<
+  RootStackParamList,
+  "Register"
+>;
+type Props = {
+  navigation: ProfileScreenNavigationProp;
+};
 
-export default function RegisterScreen() {
+export default function RegisterScreen({ navigation }: Props) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
-      <View style={styles.separator} />
-      <Register />
+    <View style={[styles.container, { backgroundColor: "#dfffe1" }]}>
+      <StatusBar barStyle="dark-content" backgroundColor="#dfffe1" />
+      <RegisterForm navigation={navigation}></RegisterForm>
     </View>
   );
 }
@@ -16,8 +24,9 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    display: "flex",
     justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 20,
