@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "../services/AuthProvider";
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import AuthStack from "./AuthStack";
+
 import AppStack from "./AppStack";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { ColorSchemeName } from "react-native";

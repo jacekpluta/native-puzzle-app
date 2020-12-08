@@ -6,23 +6,13 @@ import {
   BottomTabParamList,
   LoginParamList,
   RegisterParamList,
-  RootStackParamList,
 } from "../types";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-import { NavigationScreenProp } from "react-navigation";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
-type ProfileScreenNavigationProp = NavigationScreenProp<
-  RootStackParamList,
-  "App"
->;
-type Props = {
-  navigation: ProfileScreenNavigationProp;
-};
-
-const AppStack = ({ navigation }: Props) => {
+const AppStack = () => {
   return (
     <BottomTab.Navigator initialRouteName="Login">
       <BottomTab.Screen

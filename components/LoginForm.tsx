@@ -6,7 +6,7 @@ import { window } from "../constants/Layout";
 import FormInput from "./FormInput";
 import FormButton from "./FormButton";
 import SocialButton from "./SocialButton";
-import { AuthContext } from "../navigation/AuthProvider";
+import { AuthContext } from "../services/AuthProvider";
 import * as Yup from "yup";
 import ErrorFormInput from "./FormErrorInput";
 
@@ -45,7 +45,7 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
         { setSubmitting }: FormikHelpers<MyFormValues>
       ) => {
         const data = await login(values.username, values.password);
-        console.log("data", data);
+
         setSubmitting(false);
       }}
     >

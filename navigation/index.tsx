@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
-import { AuthProvider } from "./AuthProvider";
+import { AuthProvider } from "../services/AuthProvider";
 import Routes from "./Routes";
 
 export default function Navigation({
