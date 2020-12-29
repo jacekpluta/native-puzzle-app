@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "../screens/LoginScreen";
-import OnboardingScreen from "../screens/OnboardingScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -35,14 +34,9 @@ const AuthStack = () => {
   } else {
     routeName = "Login";
   }
-  //initialRouteName={routeName}
+
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Onboarding"
-        component={OnboardingScreen}
-        options={{ header: () => null }}
-      />
       <Stack.Screen
         name="Login"
         component={LoginScreen}

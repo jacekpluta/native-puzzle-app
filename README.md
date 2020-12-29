@@ -6,13 +6,9 @@ Installation:
 
 `npm install`
 
-To Start Dev Server:
+To Start (requires expo):
 
 `npm start`
-
-To Visit:
-
-`localhost:3000`
 
 To Build:
 

@@ -3,14 +3,14 @@
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import UserReducer from "./reducer";
+import authUserReducer, { initialUserState } from "./reducer";
 
 const rootReducer = combineReducers({
-  user: UserReducer,
+  user: authUserReducer,
 });
 
 const initialState = {
-  user: undefined,
+  user: initialUserState,
 };
 
 const enhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));

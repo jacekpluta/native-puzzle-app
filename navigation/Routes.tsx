@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
+import React from "react";
 
-import { AuthContext } from "../services/AuthProvider";
+import { AuthContext } from "../services/UserActions";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -12,8 +12,6 @@ import LinkingConfiguration from "./LinkingConfiguration";
 import { ColorSchemeName } from "react-native";
 
 const Routes = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
-  const { user, setUser } = useContext(AuthContext);
-
   return (
     <NavigationContainer
       linking={LinkingConfiguration}

@@ -1,14 +1,17 @@
-// Formik x React Native example
-import React, { useContext } from "react";
+import React from "react";
 import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
 import { Formik, FormikHelpers } from "formik";
 import { window } from "../constants/Layout";
 import FormInput from "./FormInput";
 import FormButton from "./FormButton";
 import SocialButton from "./SocialButton";
-import { AuthContext } from "../services/AuthProvider";
 import * as Yup from "yup";
 import ErrorFormInput from "./FormErrorInput";
+import AsyncStorage from "@react-native-community/async-storage";
+
+import { loginUser } from "../services/UserActions";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface MyFormValues {
   username: string;
@@ -17,14 +20,14 @@ interface MyFormValues {
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string()
-    .min(3, "Too Short!")
-    .max(30, "Too Long!")
-    .required("Required"),
+    // .min(3, "Too Short!")
+    // .max(30, "Too Long!")
+    .required("Username is required"),
   password: Yup.string()
-    .matches(/\w*[a-z]\w*/, "Password must have a small letter")
-    .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
-    .matches(/\d/, "Password must have a number")
-    .min(8, ({ min }) => `Password must be at least ${min} characters`)
+    // .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+    // .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
+    // .matches(/\d/, "Password must have a number")
+    // .min(8, ({ min }) => `Password must be at least ${min} characters`)
     .required("Password is required"),
 });
 
@@ -34,8 +37,8 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
     password: "",
   };
 
-  const { login, errorUser, errorUserMessage } = useContext(AuthContext);
-  console.log(errorUserMessage);
+  const user = useSelector((state: RootState) => state.user);
+
   return (
     <Formik
       initialValues={initialValues}
@@ -44,7 +47,11 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
         values: MyFormValues,
         { setSubmitting }: FormikHelpers<MyFormValues>
       ) => {
-        const data = await login(values.username, values.password);
+        loginUser(values.username, values.password);
+
+        // console.log(state);
+
+        // console.log(AsyncStorage.getItem("token"));
 
         setSubmitting(false);
       }}
@@ -67,7 +74,7 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
 
           <FormInput
             touched={touched.username}
-            errors={errors.username || errorUserMessage}
+            errors={errors.username}
             labelValue={values.username}
             placeholderText={"Username"}
             iconType={"user"}
@@ -79,7 +86,7 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
 
           <FormInput
             touched={touched.password}
-            errors={errors.password || errorUserMessage}
+            errors={errors.password}
             labelValue={values.password}
             placeholderText={"Password"}
             type={"password"}
