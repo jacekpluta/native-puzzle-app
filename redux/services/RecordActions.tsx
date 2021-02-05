@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { backendUrl } from "../constants/BackendUrl";
+import { backendUrl } from "../../constants/BackendUrl";
 
 interface IRecord {
   _id: string;
@@ -54,7 +54,7 @@ export const GetRecords = async (from: Date, to: Date): Promise<any> => {
       return postResponse;
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err.message);
       return;
     });
   return resJson;

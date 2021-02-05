@@ -5,7 +5,6 @@ import { Formik, FormikHelpers } from "formik";
 import { window } from "../constants/Layout";
 import FormInput from "./FormInput";
 import FormButton from "./FormButton";
-import { AuthContext } from "../services/UserActions";
 import * as Yup from "yup";
 import ErrorFormInput from "./FormErrorInput";
 

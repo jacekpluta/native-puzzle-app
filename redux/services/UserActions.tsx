@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import axios, { AxiosResponse } from "axios";
-import { backendUrl } from "../constants/BackendUrl";
-import { ErrorObject, UserObject } from "../types";
+import { backendUrl } from "../../constants/BackendUrl";
+import { ErrorObject, UserObject } from "../../types";
 import { Alert } from "react-native";
 import { Dispatch } from "redux";
 import {
@@ -14,7 +14,7 @@ import {
   fetchUserFailure,
   fetchUserRequest,
   fetchUserSuccess,
-} from "../redux/actions";
+} from "../actions";
 
 const unknownErrorResponse = (errorMessage: string) => {
   return {
@@ -27,9 +27,10 @@ export const loginUser = async (
   username: string,
   password: string
 ): Promise<any> => {
+  console.log("keke");
   return (dispatch: Dispatch) => {
     dispatch(loginUserRequest());
-    console.log("git");
+
     axios
       .post(`${backendUrl}/api/users/login`, {
         username,

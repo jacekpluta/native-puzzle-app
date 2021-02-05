@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import ErrorFormInput from "./FormErrorInput";
 import AsyncStorage from "@react-native-community/async-storage";
 
-import { loginUser } from "../services/UserActions";
+import { loginUser } from "../redux/services/UserActions";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 
@@ -48,10 +48,6 @@ export const LoginForm: React.FC<{ navigation: any }> = ({ navigation }) => {
         { setSubmitting }: FormikHelpers<MyFormValues>
       ) => {
         loginUser(values.username, values.password);
-
-        // console.log(state);
-
-        // console.log(AsyncStorage.getItem("token"));
 
         setSubmitting(false);
       }}

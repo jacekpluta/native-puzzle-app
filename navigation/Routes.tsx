@@ -1,6 +1,5 @@
 import React from "react";
 
-import { AuthContext } from "../services/UserActions";
 import {
   NavigationContainer,
   DefaultTheme,
